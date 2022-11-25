@@ -189,4 +189,4 @@ if user_choice == 'вакансии':
 elif user_choice == 'статистика':
 	report.generate_excel()
 else:
-	print('Неправильно указана опция')
+	print('Неправильная опция')
