@@ -7,35 +7,94 @@ from openpyxl.styles import Font, Border, Side
 
 
 class Salary:
+	"""Класс для представления зарплаты.
+	Attributes:
+		 salary_from (int): Нижняя граница вилки оклада
+		 salary_to (int): Верхняя граница вилки оклада
+		 salary_currency (str): Валюта оклада
+
+	"""
 	currency_to_rub = {"AZN": 35.68, "BYR": 23.91, "EUR": 59.90, "GEL": 21.74, "KGS": 0.76,
 	                   "KZT": 0.13, "RUR": 1, "UAH": 1.64, "USD": 60.66, "UZS": 0.0055}
 
 	def __init__(self, salary_from, salary_to, salary_currency):
-		self.salary_from = float(salary_from)
-		self.salary_to = float(salary_to)
+		"""Инициализирует объект Salary, выполняет конвертацию целочисленных полей
+		Args:
+			salary_from (int / float / str): Нижняя граница вилки оклада
+			salary_to (int / float / str): Верхняя граница вилки оклада
+			salary_currency (str): Валюта оклада
+		"""
+
+		self.salary_from = int(float(salary_from))
+		self.salary_to = int(float(salary_to))
 		self.salary_currency = salary_currency
 
 	def get_average(self):
+		"""Вычисляет среднюю зарплату из вилки и переводит в рубли с помощью словаря currency_to_rub
+
+		Returns:
+			float: Средняя зарплата в рублях
+		"""
 		return 0.5 * (self.salary_from + self.salary_to) * self.currency_to_rub[self.salary_currency]
 
 
 class Vacancy:
+	"""Класс для представления параметров Вакансии
+	Attributes:
+		name (str): Название вакансии
+		salary (Salary): Оклад вакансии
+		area_name (str): Город вакансии
+		published_at (str): Дата и время публикации вакансии
+	"""
+
 	def __init__(self, vacancy):
+		"""Инициализирует объект Vacancy
+		Args:
+			name (str): Название вакансии
+			salary (Salary): Оклад вакансии
+			area_name (str): Город вакансии
+			published_at (str): Дата и время публикации вакансии
+		"""
 		self.name = vacancy['name']
 		self.salary = Salary(vacancy['salary_from'], vacancy['salary_to'], vacancy['salary_currency'])
 		self.area_name = vacancy['area_name']
 		self.published_at = vacancy['published_at']
 
 	def get_year(self):
+		"""Возвращает год публикации вакансии в целочисленном виде
+		Returns:
+			int: Год публикации вакансии
+		"""
 		return int(self.published_at[:4])
 
 
 class DataSet:
+	"""Класс для предоставления результатов обработки данных о вакансии
+	Attributes:
+		file_name (str): Название CSV-файла для обработки данных о конкретной вакансии
+		vacancy_name (str): Название вакансии
+	"""
+
 	def __init__(self, file_name, name):
+		"""Инициализирует объект DataSet
+		Args:
+			file_name (str): Название CSV-файла для обработки данных о конкретной вакансии
+			vacancy_name (str): Название вакансии
+		"""
 		self.file_name = file_name
 		self.vacancy_name = name
 
 	def parse_csv(self):
+		"""Разбивает данные по словарям для дальнейшей обработки
+		Returns:
+			1) (dict): Динамика уровня зарплат по годам
+			2) (dict): Динамика количества вакансий по годам
+			3) (dict): Динамика уровня зарплат по годам для выбранной профессии
+			4) (dict): Динамика количества вакансий по годам для выбранной профессии
+			5) (dict): Уровень зарплат по городам
+			6) (dict): Доля вакансий по городам
+			7) (int): Общее число вакансий
+		"""
 		salary, amount, this_vacancy_salary, this_vacancy_amount, salary_city, share_city = {}, {}, {}, {}, {}, {}
 		count = 0
 		with open(self.file_name, encoding='utf-8-sig') as file:
@@ -57,18 +116,33 @@ class DataSet:
 
 	@staticmethod
 	def append_to_dictionary(dct, key, summand):
+		"""Добавление в словарь
+			dct (dict): Словарь
+			key: Ключ
+			summand: Добавляемый объект
+		"""
 		if key not in dct:
 			dct[key] = summand
 		else:
 			dct[key] += summand
 
 	@staticmethod
-	def convert_dct(dct: dict):
+	def convert_dct(dct):
+		"""Конвертирует значения словаря"""
 		for key, value in dct.items():
 			dct[key] = 0 if len(value) == 0 else int(sum(value) / len(value))
 		return dct
 
 	def get_formatted_data(self):
+		"""Берет данные из parse_csv и приводит к отформатированному виду
+		Returns:
+			1) (dict): Динамика уровня зарплат по годам
+			2) (dict): Динамика количества вакансий по годам
+			3) (dict): Динамика уровня зарплат по годам для выбранной профессии
+			4) (dict): Динамика количества вакансий по годам для выбранной профессии
+			5) (dict): Уровень зарплат по городам (в порядке убывания)
+			6) (dict): Доля вакансий по городам (в порядке убывания)
+		"""
 		salary, amount, this_vacancy_salary, this_vacancy_amount, salary_city, share_city, count = self.parse_csv()
 		for key, value in share_city.items():
 			share_city[key] = round(value / count, 4)
@@ -81,7 +155,25 @@ class DataSet:
 
 
 class Report:
+	"""Класс для представления отчетов по вакансии
+	Attributes:
+		salary (dict): Динамика уровня зарплат по годам
+		amount (dict): Динамика количества вакансий по годам
+		this_vacancy_salary (dict): Динамика уровня зарплат по годам для выбранной профессии
+		this_vacancy_amount (dict): Динамика количества вакансий по годам для выбранной профессии
+		salary_city (dict): Уровень зарплат по городам (в порядке убывания)
+		share_city (dict): Доля вакансий по городам (в порядке убывания)
+	"""
 	def __init__(self, salary, amount, this_vacancy_salary, this_vacancy_amount, salary_city, share_city):
+		"""Инициализирует объект Report
+		Args:
+			salary (dict):
+			amount (dict):
+			this_vacancy_salary (dict):
+			this_vacancy_amount (dict):
+			salary_city (dict):
+			share_city (dict):
+		"""
 		self.salary = salary
 		self.amount = amount
 		self.this_vacancy_salary = this_vacancy_salary
@@ -90,6 +182,7 @@ class Report:
 		self.share_city = share_city
 
 	def generate_image(self):
+		"""Формирует отчет в виде изображения с графиками"""
 		fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2)
 		self.vertical_bar(ax1, 'Уровень зарплат по годам', 'Средняя з/п', self.salary, self.this_vacancy_salary)
 		self.vertical_bar(ax2, 'Количества вакансий по годам', 'Количество вакансий', self.amount,
@@ -111,6 +204,7 @@ class Report:
 		plt.savefig('graph.png')
 
 	def generate_excel(self):
+		"""Формирует отчет в виде .xlsx с таблицами"""
 		wb = Workbook()
 		font_bold = Font(bold=True)
 		side = Side(border_style='thin', color='000000')
@@ -139,6 +233,13 @@ class Report:
 
 	@staticmethod
 	def vertical_bar(ax, title, legend, data, this_vacancy_data):
+		"""Cтатический метод настройки диаграммы
+		Args:
+			ax: График
+			title (str): Заголовoк графика
+			legend (str): Легенда графика
+			data, this_vacancy_data (dict): Данные по всем вакансиям и выбранной
+		"""
 		ax.set_title(title, fontsize=8)
 		first_bar = ax.bar(np.array(list(data)) - 0.2, data.values(), width=0.4)
 		this_name_bar = ax.bar(np.array(list(this_vacancy_data.keys())) + 0.2, this_vacancy_data.values(), width=0.4)
@@ -150,23 +251,45 @@ class Report:
 
 	@staticmethod
 	def fill_excel(sheet, data):
+		"""Статический метод для заполнения строками таблицы в .xlsx
+		Args:
+			sheet: Лист в .xlsx
+			data (list[list]): Листов листов для заполнения листа .xlsx построчно
+		"""
 		for el in data:
 			sheet.append(el)
 
 	@staticmethod
 	def set_border(sheet, border, data, columns):
+		"""Статический метод для установки границ ячейки в .xlsx
+		Args:
+			sheet: Лист в .xlsx
+			border (Border): Граница ячейки
+			data (list): Данные
+			columns (str): Столбцы
+		"""
 		for i in range(1, len(data) + 1):
 			for column in columns:
 				sheet[f'{column}{i}'].border = border
 
 	@staticmethod
 	def set_font(font, *sheets):
+		"""Установка шрифта в .xlsx
+		Args:
+			font (Font): Шрифт
+			*sheets: Листы файла .xlsx
+		"""
 		for sheet in sheets:
 			for column in 'ABCDE':
 				sheet[f'{column}{1}'].font = font
 
 	@staticmethod
 	def set_column_width(data, sheet):
+		"""Выставление ширины столбца в .xlsx
+		Args:
+			data (list[List]): Данные
+			sheet: Лист .xlsx
+		"""
 		# from https://stackoverflow.com/questions/13197574/openpyxl-adjust-column-width-size
 		column_widths = []
 		for row in data:
