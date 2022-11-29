@@ -4,6 +4,7 @@ import numpy as np
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Border, Side
+import doctest
 
 
 class Salary:
@@ -23,8 +24,22 @@ class Salary:
 			salary_from (int / float / str): Нижняя граница вилки оклада
 			salary_to (int / float / str): Верхняя граница вилки оклада
 			salary_currency (str): Валюта оклада
-		"""
 
+		>>> type(Salary(10.1, 20, 'RUR')).__name__
+		'Salary'
+		>>> Salary(10.1, 20.2, 'RUR').salary_from
+		10
+		>>> Salary('1000.1111111111', 20.2, 'RUR').salary_from
+		1000
+		>>> Salary(10.1, 20.2, 'RUR').salary_to
+		20
+		>>> Salary(10, '20000.33452543245', 'RUR').salary_to
+		20000
+		>>> Salary(100, 200, 'EUR').salary_currency
+		'EUR'
+		>>> Salary(100, 200, 'RUR').salary_currency
+		'RUR'
+		"""
 		self.salary_from = int(float(salary_from))
 		self.salary_to = int(float(salary_to))
 		self.salary_currency = salary_currency
@@ -34,6 +49,17 @@ class Salary:
 
 		Returns:
 			float: Средняя зарплата в рублях
+
+		>>> Salary(10, 20, 'RUR').get_average()
+		15.0
+		>>> Salary(100, '150', 'RUR').get_average()
+		125.0
+		>>> Salary('1000.2', '1500.9999999999', 'RUR').get_average()
+		1250.0
+		>>> Salary(10, 20, 'EUR').get_average()
+		898.5
+		>>> Salary(10000, '20000.5', 'UZS').get_average()
+		82.5
 		"""
 		return 0.5 * (self.salary_from + self.salary_to) * self.currency_to_rub[self.salary_currency]
 
@@ -50,10 +76,18 @@ class Vacancy:
 	def __init__(self, vacancy):
 		"""Инициализирует объект Vacancy
 		Args:
-			name (str): Название вакансии
-			salary (Salary): Оклад вакансии
-			area_name (str): Город вакансии
-			published_at (str): Дата и время публикации вакансии
+			vacancy (dict): Cловарь с данными
+
+		>>> type(Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:34:36+0300'})).__name__
+		'Vacancy'
+		>>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:34:36+0300'}).name
+		'Программист'
+		>>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:34:36+0300'}).area_name
+		'Екатеринбург'
+		>>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:34:36+0300'}).published_at
+		'2007-12-03T17:34:36+0300'
+		>>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:34:36+0300'}).salary.get_average()
+		15.0
 		"""
 		self.name = vacancy['name']
 		self.salary = Salary(vacancy['salary_from'], vacancy['salary_to'], vacancy['salary_currency'])
@@ -64,6 +98,12 @@ class Vacancy:
 		"""Возвращает год публикации вакансии в целочисленном виде
 		Returns:
 			int: Год публикации вакансии
+		>>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:40:09+0300'}).get_year()
+		2007
+		>>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2022-12-03T17:40:09+0300'}).get_year()
+		2022
+		>>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2014-12-03T17:40:09+0300'}).get_year()
+		2014
 		"""
 		return int(self.published_at[:4])
 
@@ -80,6 +120,15 @@ class DataSet:
 		Args:
 			file_name (str): Название CSV-файла для обработки данных о конкретной вакансии
 			vacancy_name (str): Название вакансии
+
+		>>> DataSet('vacancies_by_year.csv', 'Программист').file_name
+		'vacancies_by_year.csv'
+		>>> DataSet('empty.csv', 'Программист').file_name
+		'empty.csv'
+		>>> DataSet('any.csv', 'Программист').vacancy_name
+		'Программист'
+		>>> DataSet('any.csv', 'Аналитик').vacancy_name
+		'Аналитик'
 		"""
 		self.file_name = file_name
 		self.vacancy_name = name
@@ -133,7 +182,8 @@ class DataSet:
 			dct[key] = 0 if len(value) == 0 else int(sum(value) / len(value))
 		return dct
 
-	def get_formatted_data(self):
+	def get_formatted_data(self, salary, amount, this_vacancy_salary, this_vacancy_amount, salary_city, share_city,
+	                       count):
 		"""Берет данные из parse_csv и приводит к отформатированному виду
 		Returns:
 			1) (dict): Динамика уровня зарплат по годам
@@ -143,7 +193,6 @@ class DataSet:
 			5) (dict): Уровень зарплат по городам (в порядке убывания)
 			6) (dict): Доля вакансий по городам (в порядке убывания)
 		"""
-		salary, amount, this_vacancy_salary, this_vacancy_amount, salary_city, share_city, count = self.parse_csv()
 		for key, value in share_city.items():
 			share_city[key] = round(value / count, 4)
 		share_city = list(filter(lambda x: x[-1] > 0.01, [(key, value) for key, value in share_city.items()]))
@@ -164,6 +213,7 @@ class Report:
 		salary_city (dict): Уровень зарплат по городам (в порядке убывания)
 		share_city (dict): Доля вакансий по городам (в порядке убывания)
 	"""
+
 	def __init__(self, salary, amount, this_vacancy_salary, this_vacancy_amount, salary_city, share_city):
 		"""Инициализирует объект Report
 		Args:
@@ -173,6 +223,13 @@ class Report:
 			this_vacancy_amount (dict):
 			salary_city (dict):
 			share_city (dict):
+
+		>>> Report({'2007': 20000, '2008': 22000}, {}, {}, {}, {}, {}).salary['2007']
+		20000
+		>>> Report({}, {'2007': 1000, '2008': 1150}, {}, {}, {}, {}).amount['2008']
+		1150
+		>>> Report({}, {}, {}, {}, {}, {'Москва': 0.447, 'Санкт-Петербург': 0.214}).share_city['Москва']
+		0.447
 		"""
 		self.salary = salary
 		self.amount = amount
@@ -238,7 +295,8 @@ class Report:
 			ax: График
 			title (str): Заголовoк графика
 			legend (str): Легенда графика
-			data, this_vacancy_data (dict): Данные по всем вакансиям и выбранной
+			data (dict): Данные по всем вакансиям
+			this_vacancy_data (dict): Данные по выбранной вакансии
 		"""
 		ax.set_title(title, fontsize=8)
 		first_bar = ax.bar(np.array(list(data)) - 0.2, data.values(), width=0.4)
@@ -305,7 +363,7 @@ class Report:
 
 
 dataset = DataSet('vacancies_by_year.csv', input('Введите название вакансии: '))
-report = Report(*dataset.get_formatted_data())
+report = Report(*dataset.get_formatted_data(*dataset.parse_csv()))
 user_choice = input('Вакансии или статистика? ').lower()
 if user_choice == 'вакансии':
 	report.generate_image()
