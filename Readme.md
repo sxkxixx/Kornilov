@@ -4,3 +4,19 @@
 
 # Результат unittest
 ![img_2.png](testing_result/img_2.png)
+
+
+# Результаты профилирования кода:
+### В программе представлены 5 функций для парсинга даты
+* test_datetime_strptime
+![img_1.png](profiling_results/img_1.png)
+* test_parsing_with_slices
+![img_2.png](profiling_results/img_2.png)
+* test_parsing_with_format
+![img_3.png](profiling_results/img_3.png)
+* test_parsing_dateutil_parse....
+![img_4.png](profiling_results/img_4.png)
+* test_parsing_with_split
+* ![img_5.png](profiling_results/img_5.png)
+## Вывод: Функция "test_parsing_with_slices" показала наилучший результат на большом объеме данных
+## Использование библиотек приводит к большим трудозатратам
