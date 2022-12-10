@@ -1,5 +1,8 @@
 import pandas as pd
 import threading
+from time import time
+
+start = time()
 
 
 class Parser:
@@ -7,15 +10,12 @@ class Parser:
 		self.file_name = file_name
 		self.__data__ = pd.read_csv(self.file_name)
 
-	@property
-	def years(self):
-		return self.__data__['published_at'].apply(lambda x: x[:4]).unique()
-
-	def write_to_csv(self):
+	def parse_to_files(self):
 		thread_pool = []
-		for year in self.years:
-			filtered_data = self.__data__[self.__data__['published_at'].str.contains(year)]
-			thread = threading.Thread(target=self.write_chunk_to_csv, args=(filtered_data, f'parsed_data/vacancies_by_{year}.csv',))
+		self.__data__['year'] = self.__data__['published_at'].apply(lambda x: x[:4])
+		groups = self.__data__.groupby(['year'])
+		for group, year in zip(groups, self.__data__['year'].unique()):
+			thread = threading.Thread(target=self.write_chunk_to_csv, args=(group[1].loc[:, :'published_at'], f'parsed_data/vacancies_by_{year}.csv'))
 			thread.start()
 			thread_pool.append(thread)
 		for thread in thread_pool:
@@ -27,4 +27,7 @@ class Parser:
 
 
 parser = Parser('data/vacancies_by_year.csv')
-parser.write_to_csv()
+parser.parse_to_files()
+print(time() - start)
+# 24с - парсинг с фильтром
+# 15с - groupby
