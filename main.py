@@ -5,6 +5,9 @@ from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Border, Side
 import doctest
+import time
+
+start = time.time()
 
 
 class Salary:
@@ -25,21 +28,21 @@ class Salary:
 			salary_to (int / float / str): Верхняя граница вилки оклада
 			salary_currency (str): Валюта оклада
 
-		>>> type(Salary(10.1, 20, 'RUR')).__name__
-		'Salary'
-		>>> Salary(10.1, 20.2, 'RUR').salary_from
-		10
-		>>> Salary('1000.1111111111', 20.2, 'RUR').salary_from
-		1000
-		>>> Salary(10.1, 20.2, 'RUR').salary_to
-		20
-		>>> Salary(10, '20000.33452543245', 'RUR').salary_to
-		20000
-		>>> Salary(100, 200, 'EUR').salary_currency
-		'EUR'
-		>>> Salary(100, 200, 'RUR').salary_currency
-		'RUR'
-		"""
+		# >>> type(Salary(10.1, 20, 'RUR')).__name__
+		# 'Salary'
+		# >>> Salary(10.1, 20.2, 'RUR').salary_from
+		# 10
+		# >>> Salary('1000.1111111111', 20.2, 'RUR').salary_from
+		# 1000
+		# >>> Salary(10.1, 20.2, 'RUR').salary_to
+		# 20
+		# >>> Salary(10, '20000.33452543245', 'RUR').salary_to
+		# 20000
+		# >>> Salary(100, 200, 'EUR').salary_currency
+		# 'EUR'
+		# >>> Salary(100, 200, 'RUR').salary_currency
+		# 'RUR'
+		# """
 		self.salary_from = int(float(salary_from))
 		self.salary_to = int(float(salary_to))
 		self.salary_currency = salary_currency
@@ -49,18 +52,18 @@ class Salary:
 
 		Returns:
 			float: Средняя зарплата в рублях
-
-		>>> Salary(10, 20, 'RUR').get_average()
-		15.0
-		>>> Salary(100, '150', 'RUR').get_average()
-		125.0
-		>>> Salary('1000.2', '1500.9999999999', 'RUR').get_average()
-		1250.0
-		>>> Salary(10, 20, 'EUR').get_average()
-		898.5
-		>>> Salary(10000, '20000.5', 'UZS').get_average()
-		82.5
-		"""
+		#
+		# >>> Salary(10, 20, 'RUR').get_average()
+		# 15.0
+		# >>> Salary(100, '150', 'RUR').get_average()
+		# 125.0
+		# >>> Salary('1000.2', '1500.9999999999', 'RUR').get_average()
+		# 1250.0
+		# >>> Salary(10, 20, 'EUR').get_average()
+		# 898.5
+		# >>> Salary(10000, '20000.5', 'UZS').get_average()
+		# 82.5
+		# """
 		return 0.5 * (self.salary_from + self.salary_to) * self.currency_to_rub[self.salary_currency]
 
 
@@ -78,17 +81,17 @@ class Vacancy:
 		Args:
 			vacancy (dict): Cловарь с данными
 
-		>>> type(Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:34:36+0300'})).__name__
-		'Vacancy'
-		>>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:34:36+0300'}).name
-		'Программист'
-		>>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:34:36+0300'}).area_name
-		'Екатеринбург'
-		>>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:34:36+0300'}).published_at
-		'2007-12-03T17:34:36+0300'
-		>>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:34:36+0300'}).salary.get_average()
-		15.0
-		"""
+		# >>> type(Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:34:36+0300'})).__name__
+		# 'Vacancy'
+		# >>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:34:36+0300'}).name
+		# 'Программист'
+		# >>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:34:36+0300'}).area_name
+		# 'Екатеринбург'
+		# >>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:34:36+0300'}).published_at
+		# '2007-12-03T17:34:36+0300'
+		# >>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:34:36+0300'}).salary.get_average()
+		# 15.0
+		# """
 		self.name = vacancy['name']
 		self.salary = Salary(vacancy['salary_from'], vacancy['salary_to'], vacancy['salary_currency'])
 		self.area_name = vacancy['area_name']
@@ -98,13 +101,13 @@ class Vacancy:
 		"""Возвращает год публикации вакансии в целочисленном виде
 		Returns:
 			int: Год публикации вакансии
-		>>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:40:09+0300'}).get_year()
-		2007
-		>>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2022-12-03T17:40:09+0300'}).get_year()
-		2022
-		>>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2014-12-03T17:40:09+0300'}).get_year()
-		2014
-		"""
+		# >>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2007-12-03T17:40:09+0300'}).get_year()
+		# 2007
+		# >>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2022-12-03T17:40:09+0300'}).get_year()
+		# 2022
+		# >>> Vacancy({'name': 'Программист', 'salary_from': '10', 'salary_to': '20', 'salary_currency': 'RUR', 'area_name': 'Екатеринбург', 'published_at': '2014-12-03T17:40:09+0300'}).get_year()
+		# 2014
+		# """
 		return int(self.published_at[:4])
 
 
@@ -121,15 +124,15 @@ class DataSet:
 			file_name (str): Название CSV-файла для обработки данных о конкретной вакансии
 			vacancy_name (str): Название вакансии
 
-		>>> DataSet('vacancies_by_year.csv', 'Программист').file_name
-		'vacancies_by_year.csv'
-		>>> DataSet('empty.csv', 'Программист').file_name
-		'empty.csv'
-		>>> DataSet('any.csv', 'Программист').vacancy_name
-		'Программист'
-		>>> DataSet('any.csv', 'Аналитик').vacancy_name
-		'Аналитик'
-		"""
+		# >>> DataSet('vacancies_by_year.csv', 'Программист').file_name
+		# 'vacancies_by_year.csv'
+		# >>> DataSet('empty.csv', 'Программист').file_name
+		# 'empty.csv'
+		# >>> DataSet('any.csv', 'Программист').vacancy_name
+		# 'Программист'
+		# >>> DataSet('any.csv', 'Аналитик').vacancy_name
+		# 'Аналитик'
+		# """
 		self.file_name = file_name
 		self.vacancy_name = name
 
@@ -224,13 +227,13 @@ class Report:
 			salary_city (dict):
 			share_city (dict):
 
-		>>> Report({'2007': 20000, '2008': 22000}, {}, {}, {}, {}, {}).salary['2007']
-		20000
-		>>> Report({}, {'2007': 1000, '2008': 1150}, {}, {}, {}, {}).amount['2008']
-		1150
-		>>> Report({}, {}, {}, {}, {}, {'Москва': 0.447, 'Санкт-Петербург': 0.214}).share_city['Москва']
-		0.447
-		"""
+		# >>> Report({'2007': 20000, '2008': 22000}, {}, {}, {}, {}, {}).salary['2007']
+		# 20000
+		# >>> Report({}, {'2007': 1000, '2008': 1150}, {}, {}, {}, {}).amount['2008']
+		# 1150
+		# >>> Report({}, {}, {}, {}, {}, {'Москва': 0.447, 'Санкт-Петербург': 0.214}).share_city['Москва']
+		# 0.447
+		# """
 		self.salary = salary
 		self.amount = amount
 		self.this_vacancy_salary = this_vacancy_salary
@@ -362,12 +365,15 @@ class Report:
 			sheet.column_dimensions[get_column_letter(i)].width = column_width + 2
 
 
-dataset = DataSet('vacancies_by_year.csv', input('Введите название вакансии: '))
+dataset = DataSet('data/vacancies_by_year.csv', 'Аналитик')
 report = Report(*dataset.get_formatted_data(*dataset.parse_csv()))
-user_choice = input('Вакансии или статистика? ').lower()
+print(time.time() - start)
+# user_choice = input('Вакансии или статистика? ').lower()
+user_choice = 'вакансии'
 if user_choice == 'вакансии':
 	report.generate_image()
 elif user_choice == 'статистика':
 	report.generate_excel()
 else:
 	print('Неправильный формат ввода')
+

@@ -4,7 +4,7 @@ from dateutil.parser import parse
 import cProfile
 
 example = []
-with open('vacancies_by_year.csv', 'r', encoding='utf-8-sig') as file:
+with open('data/vacancies_by_year.csv', 'r', encoding='utf-8-sig') as file:
 	example = [row[5] for row in csv.reader(file) if row[5] != 'published_at']
 
 
