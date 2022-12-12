@@ -1,8 +1,7 @@
-# Результат doctest
-
+# Результаты выполнения тестов
+## Результат doctests
 ![img_1.png](testing_result/img_1.png)
-
-# Результат unittest
+## Результат unittest
 ![img_2.png](testing_result/img_2.png)
 
 
@@ -20,3 +19,9 @@
 * ![img_5.png](profiling_results/img_5.png)
 ## Вывод: Функция "test_parsing_with_slices" показала наилучший результат на большом объеме данных
 ## Использование библиотек приводит к большим трудозатратам
+
+# Результат профилирование кода обработки csv-чанков
+## Без многопроцессорности
+![img_6.png](profiling_results/img_6.png)
+## С многопроцессорностью
+![img_7.png](profiling_results/img_7.png)
