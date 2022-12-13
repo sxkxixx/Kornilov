@@ -25,3 +25,5 @@
 ![img_6.png](profiling_results/img_6.png)
 ## С многопроцессорностью
 ![img_7.png](profiling_results/img_7.png)
+## С использованием concurrent.futures.ProcessPoolExecutor()
+![img.png](profiling_results/img_8.png)
