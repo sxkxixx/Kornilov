@@ -1,4 +1,4 @@
-import multiprocessing as mp
+import concurrent.futures
 import pandas as pd
 import os
 import cProfile
@@ -32,13 +32,9 @@ class Analytics:
 
 	def get_files_analytics(self):
 		"""Анализирует все файлы из директории и сохраняет в поле analyzed_data"""
-		# Обработка без многопоточности
-		# for file in self.files:
-		# 	self.analyzed_data.append(self.get_chunk_analytic(file))
-
-		# Многопоточная обработка с использованием multiprocessing.Pool
-		with mp.Pool(4) as ex:
-			self.analyzed_data = ex.map(self.get_chunk_analytic, self.files)
+		with concurrent.futures.ProcessPoolExecutor() as executor:
+			for result in executor.map(self.get_chunk_analytic, self.files):
+				self.analyzed_data += [result]
 
 	def get_chunk_analytic(self, file_name):
 		"""Возвращает параметры аналитики одного файла
