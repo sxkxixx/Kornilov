@@ -1,29 +1,36 @@
 # Результаты выполнения тестов
 ## Результат doctests
-![img_1.png](testing_result/img_1.png)
+![img_1.png](img/img_11.png)
 ## Результат unittest
-![img_2.png](testing_result/img_2.png)
+![img_2.png](img/img_12.png)
 
 
 # Результаты профилирования кода:
 ### В программе представлены 5 функций для парсинга даты
 * test_datetime_strptime
-![img_1.png](profiling_results/img_1.png)
+![img_1.png](img/img_1.png)
 * test_parsing_with_slices
-![img_2.png](profiling_results/img_2.png)
+![img_2.png](img/img_2.png)
 * test_parsing_with_format
-![img_3.png](profiling_results/img_3.png)
+![img_3.png](img/img_3.png)
 * test_parsing_dateutil_parse....
-![img_4.png](profiling_results/img_4.png)
+![img_4.png](img/img_4.png)
 * test_parsing_with_split
-* ![img_5.png](profiling_results/img_5.png)
-## Вывод: Функция "test_parsing_with_slices" показала наилучший результат на большом объеме данных
-## Использование библиотек приводит к большим трудозатратам
+* ![img_5.png](img/img_5.png)
+### Вывод: Функция "test_parsing_with_slices" показала наилучший результат на большом объеме данных. Использование библиотек приводит к большим трудозатратам
 
 # Результат профилирование кода обработки csv-чанков
 ## Без многопроцессорности
-![img_6.png](profiling_results/img_6.png)
+![img_6.png](img/img_6.png)
 ## С многопроцессорностью
-![img_7.png](profiling_results/img_7.png)
+![img_7.png](img/img_7.png)
 ## С использованием concurrent.futures.ProcessPoolExecutor()
-![img.png](profiling_results/img_8.png)
+![img.png](img/img_8.png)
+
+# 3.3.1
+## Частотность валют в файле vacancies_dif_currencies.csv
+![img.png](img/img_9.png)
+## Дата публикации самой старой и самой новой вакансии!
+![img_2.png](img/img_10.png)
+## Результат задания 3.3.1 в csv
+![img.png](img/img_13.png)
