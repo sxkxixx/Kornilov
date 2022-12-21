@@ -51,7 +51,7 @@ class Worker:
 			data = xmltodict.parse(r.text)['ValCurs']
 			date = convert_date(data['@Date'])
 			dct['date'] = dct['date'] + [date]
-			currency_value = {code: 0 for code in currencies_code}
+			currency_value = {code: None for code in currencies_code}
 			for currency in data['Valute']:
 				code = currency['CharCode']
 				if code in currencies_code:
