@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <title>{{ name }}}</title>
     <style>
-        table {
-            margin: 0 auto;
-        }
         th, td {
             border: 1px solid black;
             padding: 5px;
@@ -15,26 +12,55 @@
     </style>
 </head>
 <body>
-    <h1 style="text-align: center">Аналитика по зарплатам и городам для профессии {{name}}</h1>
-    <h2 style="text-align: center">Статистика по годам</h2>
-    <table style="border-collapse: collapse">
+    <h1 style="text-align: center">Аналитика для профессии "{{ name }}"</h1>
+    <h2 style="text-align: center">Статистика по всем городам</h2>
+    <table style="width: 47%; float: left; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th>Город</th>
+                <th>Средняя зарплата</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in statistic_by_city_salary %}
+            <tr>
+                <th>{{ row[0] }}</th>
+                <th>{{ row[1] }}</th>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <table style="width: 47%; float: right; border-collapse: collapse">
+        <thead>
+            <tr>
+                <th>Город</th>
+                <th>Доля вакансий по городу</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in statistic_by_share_city %}
+            <tr>
+                <th>{{row[0]}}</th>
+                <th>{{row[1]}}</th>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2 style="text-align: center; margin-top: 30px">Средняя зарплата и количество вакансий по профессии "{{ name }}" по городу {{ city }}</h2>
+    <table style="border-collapse: collapse; margin: 0 auto;">
         <thead>
             <tr>
                 <th>Год</th>
                 <th>Средняя зарплата</th>
-                <th>Средняя зарплата - {{name}}</th>
                 <th>Количество вакансий</th>
-                <th>Количество вакансий - {{name}}</th>
             </tr>
         </thead>
         <tbody>
-            {% for row in statistic %}
+            {% for row in statistic_by_year %}
             <tr>
                 <th>{{row[0]}}</th>
                 <th>{{row[1]}}</th>
                 <th>{{row[2]}}</th>
-                <th>{{row[3]}}</th>
-                <th>{{row[4]}}</th>
             </tr>
             {% endfor %}
         </tbody>

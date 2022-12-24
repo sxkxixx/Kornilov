@@ -34,3 +34,8 @@
 ![img_2.png](img/img_10.png)
 ## Результат задания 3.3.1 в csv
 ![img.png](img/img_13.png)
+
+# Задание 3.4.2, пример PDF-отчета
+![img.png](img/img_14.png)
+# Задание 3.4.3, пример PDF-отчета
+![img.png](img/img_15.png)
