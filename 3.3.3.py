@@ -2,9 +2,14 @@ import grequests
 import pandas as pd
 
 urls = [
-	f'https://api.hh.ru/vacancies?specialization=1&per_page=100&page={page}&date_from=2022-12-20T21:00:00&date_to=2022-12-21T00:00:00'
+	f'https://api.hh.ru/vacancies?specialization=1&per_page=100&page={page}&date_from=2022-12-22T00:00:00&date_to=2022-12-22T08:00:00'
 	for page in range(20)]
-responses = (grequests.get(url) for url in urls)
+urls += [
+	f'https://api.hh.ru/vacancies?specialization=1&per_page=100&page={page}&date_from=2022-12-22T08:00:00&date_to=2022-12-22T16:00:00'
+	for page in range(20)]
+urls += [
+	f'https://api.hh.ru/vacancies?specialization=1&per_page=100&page={page}&date_from=2022-12-22T16:00:00&date_to=2022-12-23T00:00:00'
+	for page in range(20)]
 
 
 def parse_vacancy(vacancy):
@@ -18,6 +23,7 @@ def parse_vacancy(vacancy):
 	return name, salary_from, salary_to, salary_currency, area_name, published_at
 
 
+responses = (grequests.get(url) for url in urls)
 vacancies = []
 
 for response in grequests.map(responses):
@@ -27,4 +33,7 @@ for response in grequests.map(responses):
 titles = ['name', 'salary_from', 'salary_to', 'salary_currency', 'area_name', 'published_at']
 
 df = pd.DataFrame(data=vacancies, columns=titles)
-df.to_csv('api_vacancies.csv', index=False)
+df.to_csv('data/api_vacancies.csv', index=False)
+print(df.shape[0])
+# Получилось 4508 вакансий за 22.12.2022
+# Из-за большого размера файла прикрепить его в репозиторий не получается
