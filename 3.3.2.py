@@ -1,3 +1,4 @@
+
 import pandas as pd
 import numpy as np
 
@@ -8,6 +9,7 @@ class Converter:
 		source_file (DataFrame): Преобразуемый DataFrame
 		exchange_rate (DataFrame): DataFrame, с помощью которого преобразуется исходный файл
 	"""
+
 	def __init__(self, file_to_convert, exchange_rate):
 		"""Инициализатор класса Converter
 
@@ -18,17 +20,21 @@ class Converter:
 		self.source_file = pd.read_csv(file_to_convert)
 		self.exchange_rate = pd.read_csv(exchange_rate)
 
-	def get_converted_csv(self, head=True):
+	def get_converted_dataframe(self, head=True, save=False):
 		"""Конвертирует исходный csv-файл и сохраняет его в converted_dif_currencies.csv
 
 		:argument:
 			head (bool): Флаг для вывода первых 100 значений или весь исходный файл
+			save (bool): Флаг для сохранения модифицированного файла
 		"""
 		df = self.source_file.copy()
 		if head:
 			df = df.head(100)
 		df['salary'] = df.apply(lambda x: self.transform_row(x), axis=1)
-		df[['name', 'salary', 'area_name', 'published_at']].to_csv('converted_dif_currencies.csv', index=False)
+		df = df[['name', 'salary', 'area_name', 'published_at']]
+		if save:
+			df.to_csv('converted_dif_currencies.csv', index=False)
+		return df
 
 	def transform_row(self, row):
 		"""Получает и преобразует строку из исходного файла
@@ -61,4 +67,4 @@ class Converter:
 
 
 converter = Converter('data/vacancies_dif_currencies.csv', 'currency_value.csv')
-converter.get_converted_csv()
+converted_dataframe = converter.get_converted_dataframe(False)

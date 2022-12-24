@@ -52,13 +52,11 @@ class Report:
 		pdfkit.from_string(pdf_template, 'report.pdf', configuration=config, options={"enable-local-file-access": ""})
 
 
-# statistic_by_city_salary
-# statistic_by_share_city
-# file_name = input('Введите название файла: ')
-# vacancy_name = input('Введите название профессии: ')
-# area_name = input('Введите название региона: ')
-analytic = Analytic('data/converted_dif_currencies.csv', 'Аналитик', 'Екатеринбург')
+file_name = input('Введите название файла: ')
+vacancy_name = input('Введите название профессии: ')
+area_name = input('Введите название региона: ')
+analytic = Analytic(file_name, vacancy_name, area_name)
 salary_city, share_city = analytic.get_city_simple_analytic()
 avg_salary, amount = analytic.get_chosen_area_vacancy_analytic()
-report = Report('Аналитик', 'Екатеринбург', salary_city, share_city, avg_salary, amount)
+report = Report(vacancy_name, area_name, salary_city, share_city, avg_salary, amount)
 report.generate_pdf()
