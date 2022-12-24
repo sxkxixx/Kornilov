@@ -59,7 +59,7 @@ class Worker:
 					currency_value[code] = round(float(currency['Value'].replace(',', '.')) / nominal, 6)
 			for code, value in currency_value.items():
 				dct[code] = dct[code] + [value]
-		pd.DataFrame(dct).to_csv(path_or_buf='currency_value.csv', index=False, encoding='utf-8-sig')
+		pd.DataFrame(dct).to_csv(path_or_buf='data/currency_value.csv', index=False, encoding='utf-8-sig')
 
 
 worker = Worker(filtered_data)

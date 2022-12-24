@@ -38,7 +38,7 @@ class Analytic:
 			if city not in cities_share:
 				continue
 			salary_city[city] = round(df['salary'].mean())
-		return dict(sorted(salary_city.items(), key=lambda x: x[-1], reverse=True)), cities_share
+		return dict(sorted(salary_city.items(), key=lambda x: x[-1], reverse=True)[:10]), cities_share
 
 
 class Report:
