@@ -39,3 +39,12 @@
 ![img.png](img/img_14.png)
 # Задание 3.4.3, пример PDF-отчета
 ![img.png](img/img_15.png)
+
+# Результат задания 3.5.3
+![img.png](img.png)
+![img_1.png](img_1.png)
+![img_2.png](img_2.png)
+![img_3.png](img_3.png)
+![img_4.png](img_4.png)
+# Открытая БД
+![img_5.png](img_5.png)
